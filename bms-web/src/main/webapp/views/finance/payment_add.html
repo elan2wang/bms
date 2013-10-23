@@ -1,0 +1,190 @@
+<!-- TAB 1 BEGAIN-->
+<div class="tab-pane active" id="home">
+	<form id="payment_app_form" name="payment_app_form" class="form-horizontal" onsubmit="return false;">
+		<fieldset>
+			<legend>出账申请</legend>
+			<div class="control-group">
+				<label class="control-label" for="title">主&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" name="title" id="title" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="money">金&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;额</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" name="money" id="money" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="pay_type">出账方式</label>
+				<div class="controls">
+					<select id="pay_type" name="pay_type" onchange="switch_transfer_control(this.value)" class="">
+						<option value="cash">现金</option>
+						<option value="transfer">转账</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group transfer_control hide">
+				<label class="control-label" for="dst_card_num">划入账号</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="dst_card_num" name="dst_card_num" />   
+				</div>
+			</div>
+			<div class="control-group transfer_control hide">
+				<label class="control-label" for="dst_bank_name">开户银行</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="dst_bank_name" name="dst_bank_name" />
+				</div>
+			</div>
+			<div class="control-group transfer_control hide">
+				<label class="control-label" for="dst_account_name">户&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="dst_account_name" name="dst_account_name" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">是否发票</label>
+				<div class="controls">
+					<label class="checkbox inline">
+						<input type="radio" style="margin:4px 4px 0 0" id="invoice_need1" name="invoice_need" value="true" /> 是
+					</label>
+					<label class="checkbox inline">
+						<input type="radio" style="margin:4px 4px 0 0" id="invoice_need0" name="invoice_need" value="false" checked /> 否
+					</label>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">是否加急</label>
+				<div class="controls">
+					<label class="checkbox inline">
+						<input type="radio" style="margin:4px 4px 0 0" id="urgency1" name="urgency" value="true" /> 是
+					</label>
+					<label class="checkbox inline">
+						<input type="radio" style="margin:4px 4px 0 0" id="urgency0" name="urgency" value="false" checked /> 否
+					</label>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="applicant_comment">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label>
+				<div class="controls">
+					<textarea id="applicant_comment" name="applicant_comment" class="input-xlarge" rows="3"></textarea>
+				</div>
+			</div>
+			<div class="form-actions">
+				<button type="submit" id="a" class="btn btn-success confirm">提交申请</button>
+				<button class="btn reset">取消申请</button>
+			</div>
+		</fieldset>
+	</form>
+</div>
+<script type="text/javascript">
+	function switch_transfer_control(value){
+		if(value === "transfer"){
+			$(".transfer_control").show();
+		}
+		else{
+			$(".transfer_control").hide();
+		}
+	}
+	$(function(){
+		$.validator.addMethod("checkTransfer",function(value){
+			if($("#pay_type").val() == "transfer" && value.length > 0){
+				return true;
+			}
+			return false;
+		});
+		$('#payment_app_form').validate({
+			onsubmit: true,
+			onfocusout: false,
+			errorElement: 'label',
+			errorClass: 'help-inline',
+			rules: {
+				title:{
+					required: true
+				},
+				money:{
+					required: true,
+					number:true
+				},
+				dst_card_num: {
+					checkTransfer: true,
+					digits:true
+				},
+				dst_bank_name: {
+					checkTransfer: true
+				},
+				dst_account_name: {
+					checkTransfer: true
+				}
+			},
+			messages: {
+				title:{
+					required: "请输入主题"
+				},
+				money: {
+					required: "请输入金额",
+					number: "请输入数字"
+				},
+				dst_card_num: {
+					checkTransfer: "请填写卡号",
+					digits:"请填写正确的卡号"
+				},
+				dst_bank_name: {
+					checkTransfer: "请填写开户行"
+				},
+				dst_account_name: {
+					checkTransfer: "请填写账户名"
+				}
+			},
+			highlight:function(element){
+				$(element).closest('.control-group').removeClass('success').addClass('error');
+			},
+			unhighlight:function(element){
+				$(element).closest('.control-group').removeClass('error');
+			}
+		});
+		
+		
+		$(".reset").click(function(){
+			$("#title").val("");
+			$("#money").val("");
+			$("#pay_type").val("cash");
+			$("#dst_card_num").val("");
+			$("#dst_bank_name").val("");
+			$("#dst_account_name").val("");
+			$("#invoice_need0").checked = true;
+			$("#invoice_need1").checked = false;
+			$("#urgency0").checked = true;
+			$("#urgency1").checked = false;
+			$("#applicant_comment").val("");
+			$(".transfer_control").hide();
+			$(".control-group").removeClass("error");//取消控件错误标示
+			$(".help-inline").hide();//取消控件错误标示
+		});
+		
+		
+		$(".confirm").click(function(){
+			if($('#payment_app_form').validate().form()){
+				bootbox.confirm("确认申请？", function(result){
+					if(result){
+						var data = $("#payment_app_form").serialize();
+						$("#progress-bar").modal("show");
+						$.post("/bmp/1/payments/add",data,function(result){
+							$("#progress-bar").modal("hide");
+							var msg = "";
+							if(typeof(result.error_code) != "undefined"){
+								msg = result.error_msg;
+							}
+							else if(typeof(result.data.result_code) != "undefined" && parseInt(result.data.result_code) == 10000){
+								$("button[class='reset']").trigger("click"); 
+								//$(".control-group").removeClass("success").removeClass("error");
+								msg = result.data.result_msg;
+							}
+							bootbox.alert(msg);
+						},"JSON");
+					}
+				});
+			}
+		});
+	});
+</script>

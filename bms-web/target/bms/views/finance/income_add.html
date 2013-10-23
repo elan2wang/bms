@@ -1,0 +1,105 @@
+<script src="../scripts/finance/income_add.js" type="text/javascript"></script>
+<!-- TAB 1 BEGAIN-->
+<div class="tab-pane active" id="home">
+	<form id="income_app_form" name="income_app_form" class="form-horizontal" onsubmit="return false;">
+		<fieldset>
+			<legend>入账申请</legend>
+			<div class="control-group">
+				<label class="control-label" for="income_type">收入类型</label>
+				<div class="controls">
+					<select id="income_type" name="income_type" class="">
+						<option value="0">营业额</option>
+						<option value="1">培训收入</option>
+						<option value="2">余款退回</option>
+						<option value="3">应收债款</option>
+						<option value="4">投资</option>
+						<option value="5">其他</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="title">主　　题</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="title" name="title" />              
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="generate_time">收入时间</label>
+				<div class="controls">
+					<div class="input-append date form_datetime">
+						<input data-format="yyyy-mm-dd hh:ii:ss" type="text" value="" id="generate_time" name="generate_time" style="width: 243px;" />
+						<span class="add-on"><i data-time-icon="icon-time" class="icon-calendar"></i></span>
+						<label class="help-inline" for="generate_time"></label>
+					</div>
+					<script type="text/javascript">
+						$('.form_datetime').datetimepicker({
+							format:'yyyy-mm-dd hh:ii:ss',
+							autoclose:true,
+							startView:2,
+							minView:1,
+							todayBtn: "linked",
+							todayHighlight:true,
+							pickerPosition: "bottom-left",
+							language:'zh-CN'
+						});
+					</script>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="money">金　　额</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="money" name="money" />              
+				</div>
+			</div> 
+			<div class="control-group">
+				<label class="control-label" for="bring_type">入账方式</label>
+				<div class="controls">
+					<select id="bring_type" name="bring_type" class="" onchange="switch_bring_type_control(this.value)">
+						<option value="deposit">存现</option>
+						<option value="transfer">转账</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="bank_card">存入账号</label>
+				<div class="controls">
+					<select id="bank_card" name="bank_card" class="" onchange="switch_bank_card_control(this.value)">
+                        
+                    </select>
+				</div>
+			</div>
+			<div class="control-group bring_type_deposit">
+				<label class="control-label" for="serial_num">流&nbsp;&nbsp;水&nbsp;&nbsp;号</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="serial_num" name="serial_num" />              
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="invoice_type">发票方式</label>
+				<div class="controls">
+					<select id="invoice_type" name="invoice_type" class="" onchange="switch_invoice_control(this.value)">
+						<option value="invoice_no">无发票</option>
+						<option value="invoice_first">先票后款</option>
+						<option value="invoice_last">先款后票</option>
+					</select>
+				</div>
+			</div>
+			<div class="control-group invoice_title_control hide">
+				<label class="control-label" for="invoice_title">发票抬头</label>
+				<div class="controls">
+					<input type="text" class="input-xlarge" id="invoice_title" name="invoice_title" />
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="creator_comment">备　　注</label>
+				<div class="controls">
+					<textarea id="creator_comment" name="creator_comment" class="input-xlarge" rows="3"></textarea>
+				</div>
+			</div>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-success confirm">提交申请</button>
+				<button class="btn" type="reset" onclick="">取消申请</button>
+			</div>
+		</fieldset>
+	</form>
+</div>

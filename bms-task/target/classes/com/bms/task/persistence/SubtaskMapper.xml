@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bms.task.persistence.SubtaskMapper">
+	
+	<insert id="insertSubtask" parameterType="Subtask">
+		INSERT INTO b_Subtask
+		(task_id, gid, title, description, owners, start_time, end_time, 
+		create_time, star, state, last_modify_time, last_modify_person)
+		VALUES
+		(#{task_id}, #{gid}, #{title}, #{description}, #{owners}, #{start_time}, 
+		#{end_time}, #{create_time}, #{star}, #{state}, #{last_modify_time}, #{last_modify_person})
+		<selectKey resultType="Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+	</insert>
+	
+	<update id="updateSubtask" parameterType="Subtask">
+		UPDATE b_Subtask
+		<set>
+			<if test="task_id != null">task_id = #{task_id},</if>
+			<if test="gid != null">gid = #{gid},</if>
+			<if test="title != null">title = #{title},</if>
+			<if test="description != null">description = #{description},</if>
+			<if test="owners != null">owners = #{owners},</if>
+			<if test="start_time != null">start_time = #{start_time},</if>
+			<if test="end_time != null">end_time = #{end_time},</if>
+			<if test="create_time != null">create_time = #{create_time},</if>
+			<if test="star != null">star = #{star},</if>
+			<if test="state != null">state = #{state},</if>
+			<if test="last_modify_time != null">last_modify_time = #{last_modify_time},</if>
+			<if test="last_modify_person != null">last_modify_person = #{last_modify_person},</if>
+			<if test="finish_time != null">finish_time = #{finish_time},</if>
+			<if test="comment != null">comment = #{comment}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteSubtask" parameterType="Integer">
+		DELETE FROM b_Subtask WHERE id = #{id}
+	</delete>
+	
+	<delete id="deleteSubtasks" parameterType="java.util.Map">
+		DELETE FROM b_Subtask
+		<where>
+			<if test="gid != null">gid = #{gid}</if>
+			<if test="begin != null">AND start_time >= #{begin}</if>
+			<if test="id != null">OR id = #{id}</if>
+		</where>
+	</delete>
+
+	<select id="querySubtask" parameterType="java.util.Map" resultType="Subtask">
+		SELECT * FROM b_Subtask
+		<where>
+			<if test="id != null">id = #{id}</if>
+		</where>
+	</select>
+	
+	<select id="querySubtasks" parameterType="java.util.Map" resultType="Subtask">
+		SELECT * FROM b_Subtask
+		<where>
+			<if test="task_id != null">task_id = #{task_id}</if>
+			<if test="gid != null">gid = #{gid}</if>
+			<if test="begin != null">AND start_time >= #{begin}</if>
+			<if test="id != null">OR id = #{id}</if>
+		</where>
+	</select>
+	
+	<select id="querySubtasksByTaskAndOwner" parameterType="java.util.Map" resultType="Subtask">
+		SELECT
+			sub.id, sub.task_id, sub.`comment`, sub.create_time, sub.description,
+			sub.end_time, sub.finish_time, sub.gid, sub.last_modify_person,
+			sub.last_modify_time, sub.owners, sub.star, sub.start_time, sub.state, sub.title
+		FROM 
+			b_SubtaskItem item, b_Subtask sub
+		WHERE
+			item.subtask_id = sub.id
+			AND sub.task_id = #{task_id}
+			<if test="owner != null">AND item.`owner` = #{owner}</if>
+	</select>
+	
+	<select id="querySubtaskCount" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(id) FROM b_Subtask
+		<where>
+			<if test="task_id != null">task_id = #{task_id}</if>
+			<if test="state != null">AND state != #{state}</if>
+		</where>
+	</select>
+	
+</mapper>

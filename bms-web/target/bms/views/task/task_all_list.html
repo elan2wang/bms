@@ -1,0 +1,94 @@
+<script type="text/javascript" src="../scripts/task/task_all_list.js"></script>
+<script type="text/javascript">
+	$('.form_datetime').datetimepicker({
+		format : 'yyyy-mm-dd hh:ii:ss',
+		autoclose : true,
+		startView : 2,
+		minView : 1,
+		todayBtn : "linked",
+		todayHighlight : true,
+		pickerPosition : "bottom-left",
+		language : 'zh-CN'
+	});
+</script>
+
+<form class="form-horizontal" onsubmit="return false;">
+	<fieldset>
+		<legend>所有任务</legend>
+		<div class="control-group">
+			<div class="controls1">
+				<button id="btn_task_add" name="btn_task_add"
+					class="btn btn-success" type="button">
+					<i class="icon-tasks"></i> 创建任务 <i class="icon-plus"></i>
+				</button>
+			</div>
+			<div class="controls1">
+				<label class="fl mr10"></label> <select id="filter_state"
+					class="input-small">
+					<option value="">所有状态</option>
+					<option value="finished">已完成</option>
+					<option value="ongoing">进行中</option>
+					<option value="not_start">未开始</option>
+				</select> <input type="text" class="input-small" placeholder="任务标题"
+					id="filter_title">
+				<div class="input-append date form_datetime">
+					<input id="filter_start_time" class="input-135" type="text"
+						size="16" value="" placeholder="开始时间"> <span
+						class="add-on"> <i class="icon-th"></i>
+					</span>
+				</div>
+				－
+				<div class="input-append date form_datetime">
+					<input id="filter_end_time" class="input-135" type="text" size="16"
+						value="" placeholder="结束时间"> <span class="add-on">
+						<i class="icon-th"></i>
+					</span>
+				</div>
+				<button type="submit" class="btn btn-success" id="btn_task_filter"
+					name="btn_task_filter">
+					<i class="icon-filter"></i> 筛选
+				</button>
+			</div>
+		</div>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>标题</th>
+					<th>创建人</th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>周期</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody id="task_all_list">
+				<!-- TASK LIST APPEND HERE -->
+			</tbody>
+		</table>
+		<div class="pagination" id="pagination"></div>
+	</fieldset>
+	
+	<!-- POPUP BOX FOR TASK_DETAIL BEGIN -->
+	<div id="task_detail_panel" class="modal hide" style="width: 300px">
+		<!-- TASK DETAIL PANNEL APPEND HERE -->
+	</div>
+	<!-- POPUP BOX FOR TASK_DETAIL BEGIN -->
+	<!-- DELETE TASK CONFIRM PANNEL BEGIN -->
+	<div id="task_delete_pannel" class="modal hide">
+		<div class="modal-header">
+			<input type="hidden" id="task_id" name="task_id" value="" />
+			<button data-dismiss="modal" class="close" type="button"></button>
+			<h5>删除任务确认</h5>
+		</div>
+		<div class="modal-body">
+			<p>您要删除此任务以及此任务的所有将来重复，还是只删除所选重复？</p>
+			<hr class="line">
+			<button class="btn offset1" data-dismiss="modal">取消</button>
+			<button id="btn_delete_all" type="submit" class="btn btn-danger">删除所有将来任务</button>
+			<button id="btn_delete_one" type="submit" class="btn">仅删除该任务</button>
+		</div>
+	</div>
+	<!-- DELETE TASK CONFIRM PANNEL END -->
+</form>

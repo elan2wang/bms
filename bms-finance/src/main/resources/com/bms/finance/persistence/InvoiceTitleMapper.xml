@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bms.finance.persistence.InvoiceTitleMapper">
+
+	<insert id="insertInvoiceTitle" parameterType="InvoiceTitle">
+		INSERT INTO b_InvoiceTitle
+		(title, enable)
+		VALUES
+		(#{title}, #{enable})
+		<selectKey resultType="Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+	</insert>
+	
+	<update id="updateInvoiceTitle" parameterType="InvoiceTitle">
+		UPDATE b_InvoiceTitle
+		<set>
+			<if test="title != null">title = #{title},</if>
+			<if test="enable != null">enable = #{enable}</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="deleteInvoiceTitle" parameterType="Integer">
+		DELETE FROM b_InvoiceTitle WHERE id = #{id}
+	</delete>
+	
+	<select id="queryInvoiceTitle" parameterType="java.util.Map" resultType="InvoiceTitle">
+		SELECT * FROM b_InvoiceTitle WHERE id = #{id}
+	</select>
+	
+	<select id="queryInvoiceTitles" resultType="InvoiceTitle">
+		SELECT * FROM b_InvoiceTitle
+	</select>
+	
+	<select id="countList" parameterType="java.util.Map" resultType="Integer">
+		SELECT COUNT(*) FROM b_InvoiceTitle
+		<where>
+			<if test="title != null">AND title like '%${title}%'</if>
+			<if test="enable != null">AND enable = #{enable}</if>
+		</where>
+	</select>
+	
+	<select id="getList" parameterType="java.util.Map" resultType="InvoiceTitle">
+		SELECT * FROM b_InvoiceTitle
+		<where>
+			<if test="title != null">AND title like '%${title}%'</if>
+			<if test="enable != null">AND enable = #{enable}</if>
+		</where>
+		LIMIT #{page.startIndex}, #{page.currentItemCount}
+	</select>
+	
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bms.admin.persistence.AuthorityResourceMapper">
+
+	<insert id="insertAuthorityResource" parameterType="AuthorityResource">
+		INSERT INTO a_AuthorityResource
+		(auth_id, res_id) VALUES (#{auth_id}, #{res_id})
+	</insert>
+	
+	<delete id="deleteAuthorityResources" parameterType="java.util.Map">
+		DELETE FROM a_AuthorityResource WHERE auth_id=#{auth_id}
+	</delete>
+
+	<select id="queryAuthorityResources" parameterType="java.util.Map" resultType="AuthorityResource">
+		SELECT * FROM a_AuthorityResource
+		<where>
+			<if test="auth_id != null">auth_id=#{auth_id}</if>
+			<if test="res_id != null">res_id=#{res_id}</if>
+		</where>
+	</select>
+	
+	<select id="queryResourcesByAuth" parameterType="java.util.Map" resultType="Resource">
+		SELECT * FROM a_Resource 
+		<where>
+			res_id IN (SELECT res_id FROM a_AuthorityResource WHERE auth_id = #{auth_id})
+		</where>
+	</select>
+	
+	<select id="queryAuthoritiessByRes" parameterType="java.util.Map" resultType="Authority">
+		SELECT * FROM a_Authority 
+		<where>
+			auth_id IN (SELECT auth_id FROM a_AuthorityResource WHERE res_id = #{res_id})
+		</where>
+	</select>
+	
+</mapper>

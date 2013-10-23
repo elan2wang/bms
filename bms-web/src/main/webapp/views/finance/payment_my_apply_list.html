@@ -1,0 +1,250 @@
+<!-- TAB 1 BEGAIN-->
+<div class="tab-pane active" id="home">
+	<form class="form-horizontal" id="paymentSearchForm" name="paymentSearchForm" onsubmit="return false;">
+		<fieldset>
+			<legend>我的出账申请</legend>
+			<div class="control-group">
+				<div class="controls1 serach_control_id">
+					<input type="text" placeholder="编号" class="input-small" id="search_id" name="id">
+				</div>
+				<div class="controls1 serach_control_title">
+					<input id="search_title" placeholder="主题" name="title" type="text" class="input-small" value="" size="16">
+				</div>
+				<div class="controls1 serach_control_pay_type">
+					<select id="search_pay_type" name="pay_type" class="input-small">
+						<option value="">所有出账方式</option>
+						<option value="cash">现金</option>
+						<option value="transfer">划账</option>
+					</select>
+				</div>
+				<div class="controls1 serach_control_urgency">
+					<select id="search_urgency" name="urgency" class="input-small">
+						<option value="">是否加急</option>
+						<option value="true">是</option>
+						<option value="false">否</option>
+					</select>
+				</div>
+				<div class="controls1 serach_control_invoice_need">
+					<select id="search_invoice_need" name="invoice_need" class="input-small">
+						<option value="">是否发票</option>
+						<option value="true">是</option>
+						<option value="false">否</option>
+					</select>
+				</div>
+				<div class="controls1 serach_control_invoice_state">
+					<select id="search_invoice_state" name="invoice_state" class="input-small">
+						<option value="">发票状态</option>
+						<option value="open">未收发票</option>
+						<option value="closed">已收发票</option>
+					</select>
+				</div>
+				<div class="controls1 serach_control_state">
+					<select id="search_state" name="state" class="input-small">
+						<option value="">所有状态</option>
+						<option value="new">新创建</option>
+						<option value="agreed">审批通过</option>
+						<option value="disagreed">审批不通过</option>
+						<option value="accountant_payed">财务已出帐</option>
+						<option value="teller_payed">出纳已出帐</option>
+						<option value="pending">挂起</option>
+						<option value="closed">关闭</option>
+					</select>
+				</div>
+				<div class="controls1 serach_control_order">
+					<select id="search_order" name="order" class="input-small">
+						<option value="">申请时间</option>
+						<option value="asc&sort=apply_time">升序</option>
+						<option value="desc&sort=apply_time">降序</option>
+					</select>
+				</div>
+				<div class="controls1">
+					<button class="btn btn-success" id="btn_search_payment" name="btn_search_payment" type="submit">
+						<i class="icon-filter"></i> 筛选
+					</button>
+				</div>
+			</div>
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>编号</th>
+							<th>加急</th>
+							<th>主题</th>
+							<th>金额</th>
+							<th>出账方式</th>
+							<th>是否发票</th>
+							<th>状态</th>
+							<th>发票状态</th>
+							<th>申请时间</th>
+							<th>操作</th>
+						</tr>
+					</thead>
+					<tbody id="payment_detail_lists">
+					</tbody>
+				</table>
+			<div class="pagination" id="pagination"></div>
+		</fieldset>
+	</form>
+	
+</div>
+<div id="payment_info_panel" class="modal hide fade" style="width:960px;left:15%;margin:0;padding:0;">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+		<h3>出账申请详情</h3>
+	</div>
+	<div class="modal-body">
+		<div class="span6">
+			<form class="form-horizontal" id="payment_detail_form" name="payment_detail_form" onsubmit="return false;">
+				<fieldset>
+					<div class="control-group">
+						<label class="control-label" for="id">申请编号</label>
+						<div class="controls">
+							<input id="id" name="id" class="input-xlarge info_container" type="text" disabled="" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="applicant">申请人</label>
+						<div class="controls">
+							<input id="applicant" name="applicant" class="input-xlarge info_container" type="text" disabled="" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="apply_time">时间</label>
+						<div class="controls">
+							<input id="apply_time" name="apply_time" class="input-xlarge info_container" type="text" disabled="" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="title">主题</label>
+						<div class="controls">
+							<input id="title" name="title" class="input-xlarge disabled info_container" type="text" disabled="" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="money">金额</label>
+						<div class="controls">
+							<input id="money" name="money" class="input-xlarge disabled info_container" type="text" disabled="" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="pay_type">出账方式</label>
+						<div class="controls">
+							<select id="pay_type" name="pay_type" onchange="switch_transfer_control(this.value);" class="disabled info_container" disabled="">
+								<option value="cash">现金</option>
+								<option value="transfer">转账</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group transfer_control hide">
+						<label class="control-label" for="dst_card_num">划入账号</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge disabled info_container" id="dst_card_num" name="dst_card_num" disabled="" />   
+						</div>
+					</div>
+					<div class="control-group transfer_control hide">
+						<label class="control-label" for="dst_bank_name">开户行</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge disabled info_container" id="dst_bank_name" name="dst_bank_name" disabled="" />
+						</div>
+					</div>
+					<div class="control-group transfer_control hide">
+						<label class="control-label" for="dst_account_name">户名</label>
+						<div class="controls">
+							<input type="text" class="input-xlarge disabled info_container" id="dst_account_name" name="dst_account_name" disabled="" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">是否开发票</label>
+						<div class="controls">
+							<label class="checkbox inline">
+								<input disabled="" style="margin:4px 4px 0 0" class="disabled info_container" type="radio" id="invoice_need1" name="invoice_need"  value="true" /> 是
+							</label>
+							<label class="checkbox inline">
+								<input disabled="" style="margin:4px 4px 0 0" class="disabled info_container" type="radio" id="invoice_need0" name="invoice_need" value="false" /> 否
+							</label>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">是否加急</label>
+						<div class="controls">
+							<label class="checkbox inline">
+								<input type="radio" style="margin:4px 4px 0 0" class="disabled info_container" id="urgency1" name="urgency" value="true" disabled="" /> 是
+							</label>
+							<label class="checkbox inline">
+								<input type="radio" style="margin:4px 4px 0 0" class="disabled info_container" id="urgency0" name="urgency" value="false" disabled="" /> 否
+							</label>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="applicant_comment">备注</label>
+						<div class="controls">
+							<textarea  disabled="" class="input-xlarge disabled info_container" id="applicant_comment" name="applicant_comment" rows="3">            
+								xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+							</textarea>
+						</div>
+					</div>
+					<div class="control-group update_delete_operate hide" style="text-align: right;">
+						<input type="hidden" id="form_state" name="form_state" value="0" />
+						<button class="btn btn-success confirm" type="button" id="again_payment" name="again_payment">重新申请</button>
+						<button class="btn btn-danger confirm" type="submit" id="delete_payment" name="delete_payment">删除申请</button>
+						<button class="btn btn-success confirm hide" type="submit" id="update_payment" name="update_payment">修改申请</button>
+						<button class="btn btn-danger confirm hide" type="submit" id="cancel_update" name="cancel_update">取消修改</button>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="span4 sidebar-content state-and-invoice_state">
+			<div class="portlet box grey">
+				<div class="portlet-title line">
+					<div class="caption"><i class="icon-bookmark-empty"></i><span id="state_op_title">状态</span></div>
+					<div class="tools">
+					<a href="javascript:void(0);" class="collapse" onclick="hide_show_conetent(this);"></a>
+					</div>
+				</div>
+				<div class="portlet-body default-open" id="state-and-invoice_state">
+					<!-- load state and invoice_state here -->
+				</div>
+			</div>	
+		</div>
+		<div class="span4 sidebar-content manager_operate my_apply_list_manager_operate hide">
+			<div class="portlet box grey">
+				<div class="portlet-title line">
+					<div class="caption"><i class="icon-bookmark-empty"></i><span id="manager_op_title">总经理</span></div>
+					<div class="tools">
+						<a href="javascript:void(0);" class="collapse" onclick="hide_show_conetent(this);"></a>
+					</div>
+				</div>
+				<div class="portlet-body hide" id="manager_portlet_body">
+					<!-- load manager audit content here -->
+				</div>
+			</div>	
+		</div>
+		<div class="span4 sidebar-content accountant_operate my_apply_list_accountant_operate hide">
+			<div class="portlet box grey">
+				<div class="portlet-title line">
+					<div class="caption"><i class="icon-bookmark-empty"></i><span id="accountant_op_title">财务</span></div>
+					<div class="tools">
+						<a href="javascript:void(0);" class="collapse" onclick="hide_show_conetent(this);"></a>
+					</div>
+				</div>
+				<div class="portlet-body hide" id="accountant_portlet_body">
+					<!-- load accountant pay content here -->
+				</div>
+			</div>	
+		</div>
+		<div class="span4 sidebar-content teller_operate my_apply_list_teller_operate hide">
+			<div class="portlet box grey">
+				<div class="portlet-title line">
+					<div class="caption"><i class="icon-bookmark-empty"></i><span id="teller_op_title">出纳</span></div>
+					<div class="tools">
+					<a href="javascript:void(0);" class="collapse" onclick="hide_show_conetent(this);"></a>
+					</div>
+				</div>
+				<div class="portlet-body hide" id="teller_portlet_body">
+					<!-- load teller pay content here -->
+				</div>
+			</div>	
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../scripts/finance/payment_my_apply_list.js"></script>
+<script type="text/javascript" src="../scripts/finance/payment_detail.js"></script>

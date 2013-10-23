@@ -1,0 +1,97 @@
+<form style="margin: 0px" onsubmit="return false;"
+	name="subtask_add_form">
+	<div class="control-group margin-bottom-10">
+		<div class="controls1">
+			<input type="hidden" name="subtask_id" /> <input type="hidden"
+				name="subtask_gid" />
+		</div>
+	</div>
+	<div class="control-group margin-bottom-10">
+		<div class="controls1">
+			<textarea name="title" style="width: 350px" rows="2"
+				placeholder="请填写子任务"></textarea>
+		</div>
+	</div>
+	<div class="control-group margin-bottom-10">
+		<div class="controls1">
+			<div class="input-append date form_datetime">
+				<input name="start_time" class="input-135" type="text" size="16"
+					value="" placeholder="开始时间"> <span class="add-on"> <i
+					class="icon-th"></i>
+				</span>
+			</div>
+			-
+			<div class="input-append date form_datetime">
+				<input name="end_time" class="input-135" type="text" size="16"
+					value="" placeholder="结束时间"> <span class="add-on"> <i
+					class="icon-th"></i>
+				</span>
+			</div>
+		</div>
+	</div>
+	<div class="control-group margin-bottom-10">
+		<div class="controls1">
+			<label class="checkbox"> <a class="config"
+				href="javascript:void(0);" onclick="assign_owner(this)"
+				data-toggle="modal"> <i class="icon-group"></i>选择责任人
+			</a>
+			</label>
+		</div>
+	</div>
+	<div class="subtask_owner_list control-group margin-bottom-10">	
+	</div>
+	<hr class="line">
+	<div class="control-group btn_group" style="margin-bottom: 5px">
+		<div class="controls1">
+			<button type="submit" class="btn btn-success"
+				name="btn_subtask_add_submit"
+				onclick="subtask_add_submit(this, 'all')">保存</button>
+			<button type="submit" class="btn btn-success hide"
+				name="btn_subtask_edit_submit"
+				onclick="subtask_edit_submit(this, 'all')">修改</button>
+			<button type="submit" class="btn btn-success"
+				name="btn_subtask_delete" onclick="subtask_delete(this, 'all')">删除</button>
+		</div>
+	</div>
+	<!-- OWNER ASSIGN PANEL BEGIN -->
+	<div class="modal hide owner_assign_panel" style="width: 380px">
+		<div class="modal-header">
+			<button class="close" type="button"
+				onclick='close_owners_panel(this)'></button>
+			<h5>责任人列表</h5>
+		</div>
+		<div class="modal-body">
+			<div class="controls1" style="margin-bottom: 5px">
+				<button type="submit" class="btn btn-success" id="btn_owners_submit"
+					name="btn_owners_submit" onclick='assign_owner_submit(this)'>提交</button>
+			</div>
+			<div class="controls1">
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<th style="width: 40px;"><input type="checkbox" value=""
+								name="select_all" onclick="check_all(this,'account');"></th>
+							<th style="width: 100px;">姓名</th>
+							<th style="width: 180px;">部门</th>
+						</tr>
+					</thead>
+					<tbody class="account_list">
+						<!-- ACCOUNT APPEND HERE -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('.form_datetime').datetimepicker({
+			format : 'yyyy-mm-dd hh:ii:ss',
+			autoclose : true,
+			startView : 2,
+			minView : 1,
+			todayBtn : "linked",
+			todayHighlight : true,
+			pickerPosition : "bottom-left",
+			language : 'zh-CN'
+		});
+	</script>
+</form>
