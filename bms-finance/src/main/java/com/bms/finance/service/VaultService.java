@@ -93,11 +93,11 @@ public class VaultService {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void setEnable(String v_number, Boolean enable){
+	public void setVault_enable(String v_number, Boolean vault_enable){
 		Map params = new HashMap();
 		params.put("v_number", v_number);
-		params.put("enable", enable);
-		vaultMapper.switchEnable(params);
+		params.put("vault_enable", vault_enable);
+		vaultMapper.switchVault_enable(params);
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })

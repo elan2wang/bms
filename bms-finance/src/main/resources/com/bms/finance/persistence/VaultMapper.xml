@@ -7,10 +7,10 @@
 	<insert id="insertVault" parameterType="Vault">
 		INSERT INTO b_Vault
 		(v_number, type, alias, comment, card_bank, card_owner, 
-		payment_count, income_count, create_time, last_modify_time, last_modify_person, enable)
+		payment_count, income_count, create_time, last_modify_time, last_modify_person, vault_enable)
 		VALUES
 		(#{v_number}, #{type}, #{alias}, #{comment}, #{card_bank}, #{card_owner},
-		#{payment_count}, #{income_count}, #{create_time}, #{last_modify_time}, #{last_modify_person}, #{enable}
+		#{payment_count}, #{income_count}, #{create_time}, #{last_modify_time}, #{last_modify_person}, #{vault_enable}
 		)
 	</insert>
 	
@@ -25,7 +25,7 @@
 				<if test="income_count!=null">income_count = #{income_count},</if>
 				<if test="last_modify_time!=null">last_modify_time = #{last_modify_time},</if>
 				<if test="last_modify_person!=null">last_modify_person = #{last_modify_person},</if>
-				<if test="enable!=null">enable = #{enable}</if>
+				<if test="vault_enable!=null">vault_enable = #{vault_enable}</if>
 			</set>
 		WHERE v_number = #{v_number}
 	</update>
@@ -98,7 +98,7 @@
 		b_Vault.v_number NOT IN 
 		(SELECT DISTINCT v_number FROM a_DepartmentVault WHERE state = false)
 		AND 
-		enable = true
+		vault_enable = true
 		ORDER BY create_time desc, alias
 	</select>
 	
@@ -108,14 +108,14 @@
 		b_Vault.v_number IN 
 		(SELECT DISTINCT v_number FROM a_DepartmentVault WHERE dep_id = #{dep_id} AND state = false)
 		AND
-		enable = true
+		vault_enable= true
 		ORDER BY create_time desc, alias
 	</select>
 	
-	<update	id="switchEnable" parameterType="java.util.Map">
+	<update	id="switchVault_enable" parameterType="java.util.Map">
 		UPDATE b_Vault
 		SET
-		enable = #{enable}
+		vault_enable = #{vault_enable}
 		WHERE
 		v_number = #{v_number}
 	</update>

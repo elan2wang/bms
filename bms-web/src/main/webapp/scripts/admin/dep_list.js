@@ -26,7 +26,8 @@ $(function(){
 		init(all_department_api+"?"+data);
 	});
 	//表单验证
-	$('#department_detail_form').validate({
+	$("#department_detail_form").validate({
+		onsubmit: true,
 		errorElement: 'label',
 		errorClass: 'help-inline',
 		rules: {
@@ -36,84 +37,98 @@ $(function(){
 		},
 		messages: {
 			dep_name:{
-				required: "请输入部门名称"
+				required: "必填"
 			}
 		},
 		highlight:function(element){
 			$(element).closest('.control-group').removeClass('success').addClass('error');
 		},
-		success:function(element){
-			element.closest('.control-group').removeClass('error').addClass('success');
+		unhighlight:function(element){
+			$(element).closest('.control-group').removeClass('error');
 		}
 	});
 	
 	//  点击新增部门
 	$("#btn_department_add").click(function(){		
-		$("#btn_department_add_submit").removeClass("hide");
+		$(".control-group").removeClass("error");//取消控件错误标示
+		$(".help-inline").hide();//取消控件错误标示
 		$("#btn_department_edit_submit").addClass("hide");
+		$("#btn_cancel_update").addClass("hide");
+		$("#btn_reset").removeClass("hide");
+		$("#btn_department_add_submit").removeClass("hide");
 		$("#dep_name").val("");
 		$("#address").val("");
 		$("#dep_level").val("0");
+		$("#department_info_panel").modal("show");
 	});
 
 	// 新增部门确认时触发，创建新部门
 	$("#btn_department_add_submit").click(function(){
 		if($("#department_detail_form").validate().form()){
+			$("#department_info_panel").modal("hide");
+			var data= '';
 			var dep_name = $("#dep_name").val();
 			var address = $("#address").val();
 			var dep_level = $("#dep_level").val();
+			data += "dep_name="+dep_name+"&address="+address+"&dep_level="+dep_level;
 			$("#progress-bar").modal("show");
-			$.ajax({
-				url: department_add_api,
-				type: "post",
-				data: "dep_name="+dep_name+"&address="+address+"&dep_level="+dep_level,
-				dataType: "JSON",
-				success: function(result) {
-					$("#progress-bar").modal("hide");
-					$("#department_add_panel").modal("hide");
-					var result_code = result.data.result_code;
-					if(typeof(result_code) != "undefined" && parseInt(result_code) == 10000) {
-						bootbox.alert("新增部门成功");
-						// 刷新Tab
-						refresh_tab();
-					} else if (typeof(result.error_code) != "undefined") {
-						bootbox.alert(result.error_msg);
-					}
+			$.post(department_add_api,data,function(result){
+				$("#progress-bar").modal("hide");
+				var msg = "";
+				if(typeof(result.error_code) != "undefined"){
+					msg = result.error_msg;
 				}
-			});
+				else if(typeof(result.data.result_code) != "undefined" && parseInt(result.data.result_code) == 10000){
+					msg = result.data.result_msg;
+					$("#vault_info_panel").modal("hide");
+					var cur_url = $("#pagination ul li.active a").prop("href");//获得当前页列表的url
+					init(cur_url);//重新加载列表
+				}
+				bootbox.alert(msg);
+			},"JSON");
 		}
 	});
 
 	// 编辑部门确认时触发，更新部门
 	$("#btn_department_edit_submit").click(function(){
 		if($("#department_detail_form").validate().form()){
+			$("#progress-bar").modal("show");
+			var data = '';
 			var dep_id = $("#dep_id").val();
 			var dep_name = $("#dep_name").val();
 			var address = $("#address").val();
 			var dep_level = $("#dep_level").val();
-			$("#progress-bar").modal("show");
-			$.ajax({
-				url: department_update_api,
-				type: "post",
-				data: "dep_id="+dep_id+"&dep_name="+dep_name+"&address="+address+"&dep_level="
-					  +dep_level,
-				dataType: "JSON",
-				success: function(result) {
-					$("#progress-bar").modal("hide");
-					var result_code = result.data.result_code;
-					if(typeof(result_code) != "undefined" && parseInt(result_code) == 10000) {
-						$("#department_add_panel").modal("hide");
-						bootbox.alert("部门信息修改成功");
-						// 刷新Tab
-						refresh_tab();
-					} else if (typeof(result.error_code) != "undefined") {
-						bootbox.alert(result.error_msg);
-					}
+			data += "dep_id="+dep_id+"&dep_name="+dep_name+"&address="+address+"&dep_level="+dep_level;
+			$.post(department_update_api,data,function(result){
+				$("#progress-bar").modal("hide");
+				var msg = "";
+				if(typeof(result.error_code) != "undefined"){
+					msg = result.error_msg;
 				}
-			});
+				else if(typeof(result.data.result_code) != "undefined" && parseInt(result.data.result_code) == 10000){
+					msg = result.data.result_msg;
+					$("#department_info_panel").modal("hide");
+					var cur_url = $("#pagination ul li.active a").prop("href");//获得当前页列表的url
+					init(cur_url);//重新加载列表
+				}
+				bootbox.alert(msg);
+			},"JSON");
 		}
 	});
 
+	//取消修改
+	$("#btn_cancel_update").click(function(){
+		var dep_id = $("#dep_id").val();
+		edit_department(dep_id);
+	});
+	
+	//重置
+	$("#btn_reset").click(function(){
+		$("#dep_name").val("");
+		$("#address").val("");
+		$("#dep_level").val("0");
+	});
+	
 	// 分配账户时触发，保存
 	$("#btn_save_dep_vault").click(function(){
 		var vaults = "";
@@ -122,21 +137,19 @@ $(function(){
 		});
 		vaults = vaults.substr(0, vaults.length-1);
 		var dep_id = $("#dep_id").val();
-		$.ajax({
-			url: assign_vaults_api,
-			type: "post",
-			data: "dep_id="+dep_id+"&vaults="+vaults,
-			dataType: "JSON",
-			success: function(result) {
-				var result_code = result.data.result_code;
-				if (typeof(result_code) != "undefined" && result_code == 10000) {
-					bootbox.alert("账户分配成功");
-				} else if (typeof(result.error_code) != "undefined") {
-					bootbox.alert(result.error_msg);
-				}
-			} 
-		});
-		
+		var data = "dep_id="+dep_id+"&vaults="+vaults;
+		$.post(assign_vaults_api,data,function(result){
+			$("#progress-bar").modal("hide");
+			var msg = "";
+			if(typeof(result.error_code) != "undefined"){
+				msg = result.error_msg;
+			}
+			else if(typeof(result.data.result_code) != "undefined" && parseInt(result.data.result_code) == 10000){
+				msg = result.data.result_msg;
+				$("#department_vault_assign_panel").modal("hide");
+			}
+			bootbox.alert(msg);
+		},"JSON");
 	});
 	
 });
@@ -181,12 +194,13 @@ function init(url) {
 					var items = data.items;
 					var departments = '';
 					for (var i=0; i<items.length; i++) {
-						departments += '<tr><td>'+items[i].dep_name+'</td>';
+						departments += '<tr><td>' + (i+1) + '</td>';
+						departments += '<td>'+items[i].dep_name+'</td>';
 						departments += '<td>'+items[i].dep_level+'</td>';
 						departments += '<td>'+items[i].address+'</td>';
-						departments += '<td><a class="edit" href="javascript:void(0);" onclick="edit_department('+items[i].dep_id+');return false;" >编辑</a>';
-						departments += '<a class="edit" href="javascript:void(0);" onclick="delete_department('+items[i].dep_id+');return false;" >删除</a>';
-						departments += '<a class="edit config" href="javascript:void(0);" onclick="assign_vaults('+items[i].dep_id+',\''+items[i].dep_name+'\');return false;" data-toggle="modal">分配账户</a>';
+						departments += '<td><a class="edit" title="编辑部门" href="javascript:void(0);" onclick="edit_department('+items[i].dep_id+');return false;" ><i class="icon-pencil"></i></a>  ';
+						departments += '<a class="edit" title="删除部门" href="javascript:void(0);" onclick="delete_department('+items[i].dep_id+');return false;" ><i class="icon-trash"></i></a>  ';
+						departments += '<a class="edit config" title="分配账户" href="javascript:void(0);" onclick="assign_vaults('+items[i].dep_id+',\''+items[i].dep_name+'\');return false;" data-toggle="modal"><i class="icon-certificate"></i></a>';
 						departments += '</td></tr>';
 					}
 					$("#department_list").html(departments);
@@ -213,14 +227,18 @@ function edit_department(dep_id) {
 		dataType: "JSON",
 		success: function(result) {
 			if(typeof(result.data.dep_id) != "undefined"){
-				$("#department_add_panel").modal("show");
-				$("#btn_department_edit_submit").removeClass("hide");
-				$("#btn_department_add_submit").addClass("hide");
 				var department = result.data;
 				$("#dep_id").val(department.dep_id);
 				$("#dep_name").val(department.dep_name);
 				$("#address").val(department.address);
 				$("#dep_level").val(department.dep_level);
+				$(".control-group").removeClass("error");//取消控件错误标示
+				$(".help-inline").hide();//取消控件错误标示
+				$("#btn_department_edit_submit").removeClass("hide");
+				$("#btn_cancel_update").removeClass("hide");
+				$("#btn_department_add_submit").addClass("hide");
+				$("#btn_reset").addClass("hide");
+				$("#department_info_panel").modal("show");
 			}
 		}
 	});
@@ -235,23 +253,20 @@ function delete_department(dep_id) {
 	bootbox.confirm("删除该部门将删除和该部门相关的所有信息，确认删除?", function(result) {
 		if (result) {
 			$("#progress-bar").modal("show");
-			$.ajax({
-				url: department_delete_api,
-				type: "post",
-				data: {dep_id: dep_id},
-				dataType: "JSON",
-				success: function(result) {
-					$("#progress-bar").modal("hide");
-					var result_code = result.data.result_code;
-					if (typeof(result_code) != "undefined" && result_code == 10000) {
-						bootbox.alert("部门删除成功");
-						// 刷新Tab
-						refresh_tab();
-					} else if (typeof(result.error_code) != "undefined") {
-						bootbox.alert(result.error_msg);
-					}
+			var data = "dep_id="+dep_id;
+			$.post(department_delete_api,data,function(result){
+				$("#progress-bar").modal("hide");
+				var msg = "";
+				if(typeof(result.error_code) != "undefined"){
+					msg = result.error_msg;
 				}
-			});
+				else if(typeof(result.data.result_code) != "undefined" && parseInt(result.data.result_code) == 10000){
+					msg = result.data.result_msg;
+					var cur_url = $("#pagination ul li.active a").prop("href");//获得当前页列表的url
+					init(cur_url);//重新加载列表
+				}
+				bootbox.alert(msg);
+			},"JSON");
 		}
 	});
 }
@@ -263,7 +278,6 @@ function delete_department(dep_id) {
  */
 function assign_vaults(dep_id, dep_name) {
 	$("#department_vault_assign_panel_header").html("分配账户"+"["+dep_name+"]");
-	$("#department_vault_assign_panel").modal();
 	$("#dep_id").val(dep_id);
 	$.ajax({
 		url: current_available_api,
@@ -285,6 +299,7 @@ function assign_vaults(dep_id, dep_name) {
 					vault_list += '</label>';
 				}	
 				$("#vault_list").html(vault_list);
+				$("#department_vault_assign_panel").modal();
 			}
 		}
 	});

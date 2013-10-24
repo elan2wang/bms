@@ -229,7 +229,7 @@ function init(url) {
 						vaults += '<td>'+items[i].card_owner+'</td>';
 						vaults += '<td>'+items[i].comment+'</td>';
 						var state, op_info, enable;
-						if (items[i].enable == true) {
+						if (items[i].vault_enable == true) {
 							state = '<i class="icon-ok-circle"></i>';
 							op_info = '禁用该账户';
 							enable = false;
