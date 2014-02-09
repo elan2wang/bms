@@ -49,7 +49,7 @@ public interface VaultMapper {
 	
 	//禁用启用账户
 	@SuppressWarnings("rawtypes")
-	public void switchEnable(Map params);
+	public void switchVault_enable(Map params);
 	
 	//增加账户的出账次数
 	@SuppressWarnings("rawtypes")

@@ -74,9 +74,23 @@ public class VaultResource extends BaseResource {
 		}
 		Vault vault = new Vault(v_number, type, alias, comment, card_bank,
 				card_owner, last_modify_person);
+		/*Map map = new LinkedHashMap<String, Object>();
+		map.put("v_number", v_number);
+		map.put("type", type);
+		map.put("alias", alias);
+		map.put("comment", comment);
+		map.put("card_bank", card_bank);
+		map.put("card_owner", card_owner);
+		map.put("vault_enable", vault.getVault_enable());
+		NormalResponse response = new NormalResponse();
+		response.setAttrs(vault.toMap());
+		return response.toJson();*/
+		
+		
 		vaultService.insertVault(vault);
 		SuccessResponse response = new SuccessResponse(10000, "Add Vault Successfully");
 		return response.toJson();
+		
 		
 	}
 	
@@ -110,7 +124,6 @@ public class VaultResource extends BaseResource {
 		return response.toJson();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Path("/view")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -144,7 +157,6 @@ public class VaultResource extends BaseResource {
 		return response.toJson();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Path("/get_current_available_vaults_by_dep_id")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -176,7 +188,6 @@ public class VaultResource extends BaseResource {
 	 * 
 	 * @Param "Income" OR "Payment"
 	 */
-	@SuppressWarnings("unchecked")
 	@Path("get_income_payment_vaults")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -212,10 +223,10 @@ public class VaultResource extends BaseResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	public String switch_vault_enable(@FormParam("v_number") String v_number, 
-			@FormParam("enable") Boolean enable){
-		vaultService.setEnable(v_number, enable);
+			@FormParam("enable") Boolean vault_enable){
+		vaultService.setVault_enable(v_number, vault_enable);
 		String message = "";
-		if(enable){
+		if(vault_enable){
 			message = "Enable Vault Successfully";
 		}else{
 			message = "Disable Vault Successfully";

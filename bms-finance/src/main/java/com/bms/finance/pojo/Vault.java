@@ -32,7 +32,7 @@ public class Vault implements Serializable {
 	private Timestamp create_time;
 	private Timestamp last_modify_time;
 	private Integer last_modify_person;
-	private Boolean enable;
+	private Boolean vault_enable;
 	
 	public Vault() {
 		super();
@@ -41,7 +41,7 @@ public class Vault implements Serializable {
 	public Vault(String v_number, String type, String alias, String comment,
 			String card_bank, String card_owner, Integer payment_count,
 			Integer income_count, Timestamp create_time,
-			Timestamp last_modify_time, Integer last_modify_person, Boolean enable) {
+			Timestamp last_modify_time, Integer last_modify_person, Boolean vault_enable) {
 		super();
 		this.v_number = v_number;
 		this.type = type;
@@ -54,7 +54,7 @@ public class Vault implements Serializable {
 		this.create_time = create_time;
 		this.last_modify_time = last_modify_time;
 		this.last_modify_person = last_modify_person;
-		this.enable = enable;
+		this.vault_enable = vault_enable;
 	}
 
 	public Vault(String v_number, String type, String alias) {
@@ -70,7 +70,7 @@ public class Vault implements Serializable {
 		this.create_time = new Timestamp(System.currentTimeMillis());
 		this.last_modify_time = this.create_time;
 		this.last_modify_person = null;
-		this.enable = true;
+		this.vault_enable = true;
 	}
 	
 	
@@ -89,7 +89,7 @@ public class Vault implements Serializable {
 		this.create_time = new Timestamp(System.currentTimeMillis());
 		this.last_modify_time = create_time;
 		this.last_modify_person = last_modify_person;
-		this.enable = true;
+		this.vault_enable = true;
 	}
 
 	public String getV_number() {
@@ -180,12 +180,12 @@ public class Vault implements Serializable {
 		this.last_modify_person = last_modify_person;
 	}
 
-	public Boolean getEnable(){
-		return enable;
+	public Boolean getVault_enable(){
+		return vault_enable;
 	}
 	
-	public void setEnable(Boolean enable){
-		this.enable = enable;
+	public void setVault_enable(Boolean vault_enable){
+		this.vault_enable = vault_enable;
 	}
 	
 	public static long getSerialversionuid() {
@@ -200,11 +200,10 @@ public class Vault implements Serializable {
 				+ payment_count + ", income_count=" + income_count
 				+ ", create_time=" + create_time + ", last_modify_time="
 				+ last_modify_time + ", last_modify_person="
-				+ last_modify_person + ", enable=" + enable + "]";
+				+ last_modify_person + ", vault_enable=" + vault_enable + "]";
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public Map toMap() {
+	public Map<String, Object> toMap() {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("v_number", v_number);
 		map.put("type", type);
@@ -217,7 +216,7 @@ public class Vault implements Serializable {
 		map.put("create_time", create_time);
 		map.put("last_modify_person", last_modify_person);
 		map.put("last_modify_time", last_modify_time);
-		map.put("enable", enable);
+		map.put("vault_enable", vault_enable);
 		return map;
 	}
 	
