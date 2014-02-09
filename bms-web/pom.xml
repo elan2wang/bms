@@ -125,7 +125,7 @@
 			</plugin>
 		</plugins>
 
-		<finalName>bms</finalName>
+		<finalName>bmp</finalName>
 	</build>
 
 </project>

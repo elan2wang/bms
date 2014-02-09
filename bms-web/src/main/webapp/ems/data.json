@@ -1,0 +1,72 @@
+{
+    "in_item": {
+        "name": "二次能源",
+        "value": 289.11
+    },
+    "left_item": {
+        "name": "不平衡量",
+        "value": 6.4
+    },
+    "out_items": [
+        {
+            "name": "焦化",
+            "value": 45.34,
+            "orientation": "down"
+        },
+        {
+            "name": "动力合计",
+            "value": 46.19,
+            "orientation": "up"
+        },
+        {
+            "name": "烧结",
+            "value": 19.35,
+            "orientation": "down"
+        },
+        {
+            "name": "耐火",
+            "value": 0.25,
+            "orientation": "up"
+        },
+        {
+            "name": "炼铁",
+            "value": 2.47,
+            "orientation": "down"
+        },
+        {
+            "name": "白灰",
+            "value": 8.37,
+            "orientation": "up"
+        },
+        {
+            "name": "炼钢",
+            "value": 19.35,
+            "orientation": "down"
+        },
+        {
+            "name": "机修",
+            "value": 0.85,
+            "orientation": "up"
+        },
+        {
+            "name": "轧钢",
+            "value": 121.84,
+            "orientation": "down"
+        },
+        {
+            "name": "焦化精制",
+            "value": 4.77,
+            "orientation": "up"
+        },
+        {
+            "name": "其它",
+            "value": 16.86,
+            "orientation": "down"
+        },
+        {
+            "name": "粉末冶金",
+            "value": 0.4,
+            "orientation": "up"
+        }
+    ]
+}

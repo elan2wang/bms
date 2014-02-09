@@ -81,16 +81,5 @@ public class DepartmentService extends BaseService {
 	public void deleteDepartment(Integer dep_id){
 		departmentMapper.deleteDepartment(dep_id);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

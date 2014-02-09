@@ -17,6 +17,10 @@ var logout_api = "/bmp/1/logout";
  * BEGIN 用户退出系统 ==========================================================================================
  */
 function logout() {
+	// client side
+	// clear cookies
+	
+	// server side
 	$.get("/bmp/1/logout",{},function(result){
 		window.location.href = "/bmp/views/login.html";
 	});

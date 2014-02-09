@@ -167,7 +167,6 @@ $(function(){
 		$("#comment").val("");
 	});
 	
-	App.init();//app.js的应用初始化
 });
 
 function get_filter_data() {
