@@ -1,4 +1,4 @@
-BMS
+bms
 ===
 
 Barbershop Management System
